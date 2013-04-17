@@ -25,7 +25,7 @@ void stepRow() {
 
   cli();
   PORTB=7;
-  for (rx=0; rx<12; rx++) {
+  for (rx = 0; rx < (SIZEX / 8); rx++) {
     for (int8_t i=7; i>=0; i--)  {       // clock pin12 (0x10) HIGH + data pin13 a framebuffer es \
                                          // aktiv sor szerint beallitva (<<5), valamint blanking (0xf)
       PORTB  =  0x1f | ( !( fb[rx][screenRow] & (1<<i) ) <<5);
