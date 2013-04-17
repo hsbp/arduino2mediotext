@@ -27,6 +27,7 @@ void stepRow() {
 }
 
 void setup() {
+  Serial.begin(19200);
   for (uint8_t i = 8; i <= 13; i++) {
     pinMode(i, OUTPUT);
   }
@@ -39,4 +40,22 @@ void setup() {
 }
 
 void loop() {
+  if (Serial.available()) {
+    const byte first = Serial.read();
+    if (first & 0xC0 == 0xC0) {
+      const byte y1 = (first >> 3) & 0x07;
+      const byte y2 = first & 0x07;
+      while (!Serial.available());
+      const byte second = Serial.read();
+      const byte x1 = (second >> 4) & 0x0F;
+      const byte x2 = second & 0x0F;
+      for (uint8_t y = y1; y < y2; y++) {
+        for (uint8_t x = x1; x < x2; x++) {
+          while (!Serial.available());
+          fb[x][y] = Serial.read();
+        }
+      }
+      Serial.write(0x42);
+    }
+  }
 }
