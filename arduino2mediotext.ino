@@ -10,8 +10,6 @@ byte fb[SIZEX/8][SIZEY];
 
 int update=1;
 int screenRow;
-int dataPin=13;
-int clockPin=12;
 byte rx;
 uint16_t o;
  
