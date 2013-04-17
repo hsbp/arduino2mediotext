@@ -9,7 +9,6 @@ byte timer=0;
 byte fb[SIZEX/8][SIZEY];
 
 int screenRow;
-byte rx;
 uint16_t o;
  
 void stepRow() {
@@ -22,7 +21,7 @@ void stepRow() {
 
   cli();
   PORTB=7;
-  for (rx = 0; rx < (SIZEX / 8); rx++) {
+  for (uint8_t rx = 0; rx < (SIZEX / 8); rx++) {
     for (int8_t i=7; i>=0; i--)  {       // clock pin12 (0x10) HIGH + data pin13 a framebuffer es \
                                          // aktiv sor szerint beallitva (<<5), valamint blanking (0xf)
       PORTB  =  0x1f | ( !( fb[rx][screenRow] & (1<<i) ) <<5);
@@ -37,7 +36,7 @@ void setup() {
   for (uint8_t i = 8; i <= 13; i++) {
     pinMode(i, OUTPUT);
   }
-  for (rx=0; rx<12; rx++) {
+  for (uint8_t rx = 0; rx < 12; rx++) {
   fb[rx][3]=1;
   }
   PORTB=0xf;
