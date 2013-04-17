@@ -8,7 +8,6 @@ byte fb[SIZEX/8][SIZEY];
 int screenRow;
  
 void stepRow() {
-  updateFb(SIZEY - screenRow - 1);
   screenRow--;
   if (screenRow < 0) {
     screenRow = 6;
@@ -37,9 +36,6 @@ void setup() {
   PORTB = 0xf;
   Timer1.initialize(2800);
   Timer1.attachInterrupt(stepRow);
-}
-
-void updateFb(uint8_t row) {
 }
 
 void loop() {
