@@ -14,7 +14,6 @@ int dataPin=13;
 int clockPin=12;
 byte rx;
 uint16_t o;
-int waitVsync=1;
  
 void stepRow() {
 
