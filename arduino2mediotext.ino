@@ -12,14 +12,9 @@ void updateFb(uint8_t row);
 void loop();
 int run=0;
 const char* SCROLLTEXT = 
-//23456789012                                                                             123456789012
 
-"            Ret3k Maximum Selecta Dubstep Is Fun! - www.bitlabrecords.com/dubstepisfun http://hspbp.org            ";
-//"            http://hspbp.org/ - Hackerspace Budapest - We are the glider, not the gun ***            ";
-//        if (o>((SCROLLTEXT_SIZE+(SIZEX/8*2))*8)) {
-//416 208
-//const int SCROLLTEXT_SIZE=sizeof(SCROLLTEXT)/sizeof(char);
-#define SCROLLTEXT_SIZE 114
+"            http://hsbp.org/ - Hackerspace Budapest - +36-1-HI5-HACK - #hspbp @ IRCnet ***            ";
+#define SCROLLTEXT_SIZE 102
 const int FONT_OFFSET = 0x0000;                         
 const uint8_t C64_CHAR[] PROGMEM = { FONTDATA };
 byte timer=0;
