@@ -1,8 +1,5 @@
 #include <TimerOne.h>
 
-int run=0;
-byte timer=0;
-
 #define SIZEX 96
 #define SIZEY 7
 
