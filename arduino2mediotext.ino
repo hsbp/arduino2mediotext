@@ -21,7 +21,7 @@ const char* SCROLLTEXT =
 //const int SCROLLTEXT_SIZE=sizeof(SCROLLTEXT)/sizeof(char);
 #define SCROLLTEXT_SIZE 114
 const int FONT_OFFSET = 0x0000;                         
-const prog_uint8_t C64_CHAR[] PROGMEM = { FONTDATA };
+const uint8_t C64_CHAR[] PROGMEM = { FONTDATA };
 byte timer=0;
 
 #define SIZEX 96
