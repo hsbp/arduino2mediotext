@@ -1,10 +1,5 @@
 #include <TimerOne.h>
 
-void stepRow();
-void setRow(byte row);
-void setup();
-void updateFb(uint8_t row);
-void loop();
 int run=0;
 byte timer=0;
 
