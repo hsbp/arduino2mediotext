@@ -8,7 +8,6 @@ byte timer=0;
 
 byte fb[SIZEX/8][SIZEY];
 
-int update=1;
 int screenRow;
 byte rx;
 uint16_t o;
@@ -48,7 +47,6 @@ void setup() {
 
 void updateFb(uint8_t row) {
   if (row == SIZEY-1) {
-     if (update==1) {
         o++;
         for (byte b = 0; b<SIZEX/8; b++) {
           for (byte i = 0; i<SIZEY; i++) {
@@ -59,7 +57,6 @@ void updateFb(uint8_t row) {
         if (o>((SCROLLTEXT_SIZE-(SIZEX/8))*8)) {
           o=0;
         }
-      }
   }
 }
 
