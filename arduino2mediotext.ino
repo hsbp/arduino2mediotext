@@ -6,7 +6,6 @@
 byte fb[SIZEX/8][SIZEY];
 
 int screenRow;
-uint16_t o;
  
 void stepRow() {
 
