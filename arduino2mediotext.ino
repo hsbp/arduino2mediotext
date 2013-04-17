@@ -42,18 +42,6 @@ void setup() {
 }
 
 void updateFb(uint8_t row) {
-  if (row == SIZEY-1) {
-        o++;
-        for (byte b = 0; b<SIZEX/8; b++) {
-          for (byte i = 0; i<SIZEY; i++) {
-            fb[b][i]=(pgm_read_byte_near(C64_CHAR + FONT_OFFSET + i+(SCROLLTEXT[o/8+b]-32)*8)<<o%8)+
-            (pgm_read_byte_near(C64_CHAR + FONT_OFFSET + i+(SCROLLTEXT[o/8+b+1]-32)*8)>>(8-o%8));
-          }
-        }
-        if (o>((SCROLLTEXT_SIZE-(SIZEX/8))*8)) {
-          o=0;
-        }
-  }
 }
 
 
