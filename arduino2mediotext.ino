@@ -44,6 +44,5 @@ void setup() {
 void updateFb(uint8_t row) {
 }
 
-
 void loop() {
 }
