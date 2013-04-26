@@ -62,7 +62,8 @@ class Remote(object):
 
     def get_pixeldata_byte(self, block):
         retval = 0
-        index = pixel2fbindex(block)
+        bx, by = block
+        index = pixel2fbindex((bx * BIT_PER_BYTE, by))
         for pos, bit in enumerate(self.framebuf[index:index + 8]):
             if bit:
                 retval |= 0x80 >> pos
