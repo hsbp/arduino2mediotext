@@ -88,12 +88,6 @@ def next_block(block):
 if __name__ == '__main__':
     r = Remote()
     for y in xrange(ROWS):
-        for x in xrange(COLS / BIT_PER_BYTE):
-            print x, y
-            r.write_pixeldata((x, y), (x + 1, y + 1), chr(255))
-            sleep(1)
-    raise SystemExit(0)
-    for y in xrange(1, ROWS):
         for x in xrange(COLS):
             r.set_pixel((x, y), True)
             r.flush_pixels()
