@@ -2,10 +2,12 @@
 
 from serial import Serial
 from time import sleep
+from itertools import product, imap
 
 COLS = 96
 BIT_PER_BYTE = 8
 ROWS = 7
+PIXELS = set(product(xrange(COLS), xrange(ROWS)))
 
 class Remote(object):
     def __init__(self):
@@ -13,9 +15,8 @@ class Remote(object):
         self.framebuf = [None] * ROWS * COLS
         sleep(2)
         self.clip = None
-        for row in xrange(ROWS):
-            for col in xrange(COLS):
-                self.set_pixel((col, row), False)
+        for pixel in PIXELS:
+			self.set_pixel(pixel, False)
         self.flush_pixels()
 
     def write_pixeldata(self, b1, b2, block_pixels):

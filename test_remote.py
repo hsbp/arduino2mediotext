@@ -14,9 +14,8 @@ class TestRemote(unittest.TestCase):
                 self.get_serial_buf().getvalue(),
                 '\xC7\x0C' + '\x00' *
                     (remote.COLS / remote.BIT_PER_BYTE * remote.ROWS))
-        for x in xrange(remote.COLS):
-            for y in xrange(remote.ROWS):
-                self.assertFalse(self.remote.get_pixel((x, y)))
+        for pixel in remote.PIXELS:
+			self.assertFalse(self.remote.get_pixel(pixel))
 
     def test_first_block(self):
         sb = self.get_serial_buf()
@@ -45,12 +44,10 @@ class TestRemote(unittest.TestCase):
     def test_full(self):
         sb = self.get_serial_buf()
         sb.truncate(0)
-        for x in xrange(remote.COLS):
-            for y in xrange(remote.ROWS):
-                self.remote.set_pixel((x, y), True)
-        for x in xrange(remote.COLS):
-            for y in xrange(remote.ROWS):
-                self.assertTrue(self.remote.get_pixel((x, y)))
+        for pixel in remote.PIXELS:
+			self.remote.set_pixel(pixel, True)
+        for pixel in remote.PIXELS:
+			self.assertTrue(self.remote.get_pixel(pixel))
         self.remote.flush_pixels()
         self.assertEqual(
                 sb.getvalue(),
