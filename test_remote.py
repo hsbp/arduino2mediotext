@@ -18,6 +18,24 @@ class TestRemote(unittest.TestCase):
             for y in xrange(remote.ROWS):
                 self.assertFalse(self.remote.get_pixel((x, y)))
 
+    def test_first_block(self):
+        sb = self.get_serial_buf()
+        sb.truncate(0)
+        self.remote.set_pixel((0, 0), True)
+        self.remote.flush_pixels()
+        self.assertEqual(sb.getvalue(), '\xC1\x01\x80')
+
+    def test_second_block(self):
+        sb = self.get_serial_buf()
+        sb.truncate(0)
+        self.remote.set_pixel((8, 0), True)
+        self.remote.flush_pixels()
+        self.assertEqual(sb.getvalue(), '\xC1\x12\x80')
+        sb.truncate(0)
+        self.remote.set_pixel((9, 0), True)
+        self.remote.flush_pixels()
+        self.assertEqual(sb.getvalue(), '\xC1\x12\xc0')
+
     def test_empty_flush(self):
         sb = self.get_serial_buf()
         sb.truncate(0)
