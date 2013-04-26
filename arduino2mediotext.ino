@@ -42,7 +42,7 @@ void setup() {
 void loop() {
   if (Serial.available()) {
     const byte first = Serial.read();
-    if (first & 0xC0 == 0xC0) {
+    if ((first & 0xC0) == 0xC0) {
       const byte y1 = (first >> 3) & 0x07;
       const byte y2 = first & 0x07;
       while (!Serial.available());
