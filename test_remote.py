@@ -7,7 +7,7 @@ import remote
 
 class TestRemote(unittest.TestCase):
     def setUp(self):
-        self.remote = remote.Remote()
+        self.remote = remote.Remote(serial_class=MockSerial)
 
     def test_init(self):
         self.assertEqual(
@@ -76,8 +76,6 @@ class MockSerial(object):
             self.tried_read = True
             return ''
 
-
-remote.Serial = MockSerial
 
 if __name__ == '__main__':
     unittest.main()

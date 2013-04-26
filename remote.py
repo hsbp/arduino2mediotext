@@ -10,8 +10,8 @@ ROWS = 7
 PIXELS = set(product(xrange(COLS), xrange(ROWS)))
 
 class Remote(object):
-    def __init__(self):
-        self.port = Serial('/dev/ttyUSB0', 19200, timeout=0.1)
+    def __init__(self, serial_class=Serial):
+        self.port = serial_class('/dev/ttyUSB0', 19200, timeout=0.1)
         self.framebuf = [None] * ROWS * COLS
         sleep(2)
         self.clip = None
