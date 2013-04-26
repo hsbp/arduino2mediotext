@@ -3,18 +3,21 @@
 from serial import Serial
 from time import sleep
 from itertools import product, imap
+from operator import itemgetter
 
 COLS = 96
 BIT_PER_BYTE = 8
 ROWS = 7
 PIXELS = set(product(xrange(COLS), xrange(ROWS)))
+GET_X = itemgetter(0)
+GET_Y = itemgetter(1)
 
 class Remote(object):
     def __init__(self, serial_class=Serial):
         self.port = serial_class('/dev/ttyUSB0', 19200, timeout=0.1)
         self.framebuf = [None] * ROWS * COLS
         sleep(2)
-        self.clip = None
+        self.clip = set()
         for pixel in PIXELS:
 			self.set_pixel(pixel, False)
         self.flush_pixels()
@@ -39,27 +42,24 @@ class Remote(object):
     def set_pixel(self, pixel, value):
         self.framebuf[pixel2fbindex(pixel)] = value
         block = pixel2block(pixel)
-        if self.clip is None:
-            self.clip = block, next_block(block)
-        else:
-            (left, top), (right, bottom) = self.clip
-            x, y = block
-            left = min(left, x)
-            top = min(top, y)
-            right = max(right, x + 1)
-            bottom = max(bottom, y + 1)
-            self.clip = (left, top), (right, bottom)
+        self.clip.add(block)
 
     def flush_pixels(self):
-        if self.clip is None:
+        clip = self.clip
+        if not clip:
             return
-        (left, top), (right, bottom) = self.clip
+        xs = set(imap(GET_X, clip))
+        ys = set(imap(GET_Y, clip))
+        left = min(xs)
+        right = max(xs) + 1
+        top = min(ys)
+        bottom = max(ys) + 1
         width = right - left
         pixeldata = ''.join(
                 self.get_pixeldata_byte((left + offset % width, top + offset / width))
                 for offset in xrange((bottom - top) * width))
         self.write_pixeldata((left, top), (right, bottom), pixeldata)
-        self.clip = None
+        self.clip = set()
 
     def get_pixeldata_byte(self, block):
         retval = 0
