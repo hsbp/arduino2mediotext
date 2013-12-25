@@ -3,8 +3,8 @@
 # for joystick pinout, see https://github.com/dnet/c64joystick-arduino
 
 from serial import Serial
-from remote import Remote, PIXELS, COLS, ROWS, pixel2fbindex
-from random import randint, choice
+from remote import Remote, PIXELS
+from random import choice
 from time import sleep
 from itertools import izip
 import sys
