@@ -23,3 +23,9 @@ Dependencies for arscons build process
 
  - Arduino 1.0+ (if you have an older version, rename `*.{ino -> pde}`)
  - Scons (Debian/Ubuntu package: `scons`)
+
+Dependencies for Erlang server
+------------------------------
+
+ - Erlang OTP (tested on R16B02)
+ - dnet's fork of `erlang-serial`, compiled with `NO_RTSCTS` defined https://github.com/dnet/erlang-serial/commit/3d160b5

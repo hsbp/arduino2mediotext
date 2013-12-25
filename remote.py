@@ -13,8 +13,8 @@ GET_X = itemgetter(0)
 GET_Y = itemgetter(1)
 
 class Remote(object):
-    def __init__(self, serial_class=Serial):
-        self.port = serial_class('/dev/ttyUSB0', 19200, timeout=0.1)
+    def __init__(self, serial_class=Serial, port='/dev/ttyUSB0'):
+        self.port = serial_class(port, 19200, timeout=0.1)
         self.framebuf = [None] * ROWS * COLS
         sleep(2)
         self.clip = set()
