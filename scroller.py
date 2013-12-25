@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from __future__ import with_statement
 from remote import PIXELS, ROWS
 from time import sleep
 from PIL import Image
