@@ -2,8 +2,8 @@
 
 # src: http://www.stuartaxon.com/2010/05/17/shoebot-spectrograph/
 
-from remote import PIXELS, ROWS, COLS
-from numpy import zeros, short, fromstring, array
+from remote import ROWS, COLS
+from numpy import short, fromstring
 from numpy.fft import fft
 from math import log10
 import pyaudio
