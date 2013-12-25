@@ -8,7 +8,7 @@ from numpy.fft import fft
 from math import log10
 import pyaudio
 
-NUM_SAMPLES = 192
+NUM_SAMPLES = COLS * 2
 SAMPLING_RATE = 11025
 
 _stream = None
