@@ -15,7 +15,7 @@ acceptor(LSock, SerialPort) ->
 	{ok, Sock} = gen_tcp:accept(LSock),
 	SerialPort ! {open, ?DEVICE},
 	timer:sleep(2500),
-	Processed = processor(Sock, SerialPort),
+	processor(Sock, SerialPort),
 	SerialPort ! {close},
 	acceptor(LSock, SerialPort).
 
