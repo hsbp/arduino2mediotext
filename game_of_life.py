@@ -10,9 +10,6 @@ def run(r):
                     r.set_pixel(p, True)
     r.flush_pixels()
 
-    i = 0
-    ps = list(PIXELS)
-
     for _ in xrange(100):
             sleep(0.2)
             fb_old = list(r.framebuf)
