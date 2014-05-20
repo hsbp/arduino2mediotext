@@ -19,4 +19,5 @@ class DrawilleBridge(object):
 
     def flush_pixels(self):
         with self.term.location(0, 0):
-            print(self.canvas.frame(min_x=0, min_y=0, max_x=COLS, max_y=ROWS))
+            frame = self.canvas.frame(min_x=0, min_y=0, max_x=COLS, max_y=ROWS)
+            print(self.term.red(frame.decode('utf-8')))
