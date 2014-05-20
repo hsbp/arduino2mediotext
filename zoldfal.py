@@ -3,14 +3,12 @@
 from remote import ROWS, COLS, PIXELS
 from PIL import Image, ImageFont, ImageDraw
 from time import sleep
-from flask import Flask, request
-import json
+import requests
 
-app = Flask(__name__)
 font = ImageFont.load_default()
 bg = Image.open('zoldfal.png')
 drawn = False
-schema = (('t1', 'TEMP1'), ('t2', 'TEMP2'))
+schema = (('sensor 1', 'TEMP1'), ('sensor 2', 'TEMP2'))
 
 def display(r, a, b, n, t, offset=0):
     global drawn
@@ -32,9 +30,9 @@ def display(r, a, b, n, t, offset=0):
     sleep(t)
 
 def run(r):
-    with file('zoldfal.json', 'rb') as db:
-        payload = json.load(db)
-    ts = [(title, payload[key]) for key, title in schema]
+    api = requests.get('http://vsza.hu/hacksense/spaceapi_status.json').json()
+    ts = [(sensor['name'].replace('sensor ', 'TEMP'), sensor['value'])
+            for sensor in api['sensors']['temperature']]
     prev_n = None
     prev_t = None
     for n, t in ts:
@@ -48,13 +46,3 @@ def run(r):
         display(r, a, b, n, 5)
         prev_n = n
         prev_t = t
-
-@app.route('/save')
-def save():
-    to_save = {key: float(request.args[key]) for key, _title in schema}
-    with file('zoldfal.json', 'wb') as db:
-        json.dump(to_save, db)
-    return ''
-
-if __name__ == '__main__':
-    app.run(debug=True)
