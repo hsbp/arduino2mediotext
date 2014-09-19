@@ -7,8 +7,7 @@ from time import sleep
 
 def run(r):
     for p in PIXELS:
-            if randint(0, 2) == 0:
-                    r.set_pixel(p, True)
+        r.set_pixel(p, randint(0, 2) == 0)
     r.flush_pixels()
 
     for _ in xrange(100):
