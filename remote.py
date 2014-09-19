@@ -59,7 +59,7 @@ class Remote(object):
                 self.get_pixeldata_byte((left + offset % width, top + offset / width))
                 for offset in xrange((bottom - top) * width))
         self.write_pixeldata((left, top), (right, bottom), pixeldata)
-        self.clip = set()
+        self.clip.clear()
 
     def get_pixeldata_byte(self, block):
         retval = 0
