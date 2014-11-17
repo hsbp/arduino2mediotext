@@ -14,7 +14,6 @@
 #include <termios.h>
 #include <unistd.h>
 
-#define BUFSIZE 1024
 #define BIT_PER_BYTE 8
 #define TCP_PORT 11328
 #define ACK "ACK\n"
