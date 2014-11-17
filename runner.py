@@ -14,10 +14,14 @@ def main():
             help='Remote host to connect to')
     parser.add_argument('--tport', dest='tport', default=42493,
             help='Remote port to connect to (default: 42493)')
+    parser.add_argument('--sock', dest='sock', help='Unix socket to connect to')
     args = parser.parse_args()
     if args.drawille:
         from drawille_bridge import DrawilleBridge
         r = DrawilleBridge()
+    elif args.sock:
+        from unix import UnixSerialBridge
+        r = Remote(serial_class=UnixSerialBridge(args.sock))
     elif args.host:
         from tcp import TcpSerialBridge
         r = Remote(serial_class=TcpSerialBridge((args.host, args.tport)))
