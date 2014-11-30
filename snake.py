@@ -4,6 +4,7 @@ from remote import Remote, PIXELS, COLS
 from random import choice
 from time import sleep
 from itertools import izip
+from PIL import Image
 from threading import Thread, RLock
 import pygame, sys
 
@@ -13,6 +14,27 @@ try:
 except (IndexError, ValueError, AssertionError):
 	print >>sys.stderr, 'Usage: {0} <number of players>'.format(sys.argv[0])
 	raise SystemExit(1)
+
+WALL = (0, 0, 0)
+START = (255, 0, 0)
+END = (255, 255, 255)
+
+levels = []
+level_num = 1
+while True:
+	try:
+		level = Image.open("LAB{0}.png".format(level_num)).convert('RGB').load()
+		tmp = {WALL: [], START: [], END: []}
+		for pixel in PIXELS:
+			p = level[pixel]
+			for k, v in tmp.iteritems():
+				if p == k:
+					v.append(pixel)
+					break
+		levels.append(tmp)
+		level_num += 1
+	except:
+		break
 
 pygame.init()
 j = pygame.joystick.Joystick(0)
@@ -31,7 +53,7 @@ class Snake(object):
 	UP = (1, -1)
 	DOWN = (1, +1)
 	START = {
-			0: ((6, 0), RIGHT),
+			0: ((10, 0), DOWN),
 			1: ((COLS - 6, 0), LEFT),
 			}
 	OPPOSITES = {LEFT: RIGHT, RIGHT: LEFT, UP: DOWN, DOWN: UP}
@@ -67,9 +89,9 @@ class Snake(object):
 class Dot(object):
 	position = None
 
-	def __init__(self):
+	def __init__(self, level):
 		while self.position is None:
-			pos_candidate = choice(ps)
+			pos_candidate = choice(level[END])
 			if not r.get_pixel(pos_candidate):
 				self.position = pos_candidate
 		self.draw()
@@ -85,10 +107,13 @@ class Joystick(object):
 		new_dir = jt.get_dir()
 		if not new_dir:
 			return
+		new_dir = Snake.OPPOSITES[new_dir] # 180 degrees flip
 		if snake.direction not in (Snake.OPPOSITES[new_dir], new_dir):
 			snake.direction = new_dir
 
 joystick = Joystick()
+level_num = 0
+
 class JoyThread(Thread):
 	new_dir = None
 
@@ -124,25 +149,32 @@ jt = JoyThread()
 jt.start()
 
 while True:
+	level = levels[level_num]
 	for p in ps:
 		r.set_pixel(p, False)
+	for wall in levels[level_num][WALL]:
+		r.set_pixel(wall, True)
 	snakes = [Snake(i) for i in xrange(num_snakes)]
 	joystick.flush()
 	for snake in snakes:
 		snake.draw()
-	dot = Dot()
+	dot = Dot(level)
 	r.flush_pixels()
 	try:
 		while True:
 			for i in xrange(3):
-				sleep(0.03)
+				sleep(0.03 * 2)
 				dot.draw((i % 2) == 1)
 				r.flush_pixels()
 			joystick.get_dir(snakes)
 			for snake in snakes:
 				if dot.position in snake.pixels:
+					level_num += 1
+					if level_num == len(levels):
+						level_num = 0
+					raise SnakeCrash(snake)
 					snake.grow()
-					dot = Dot()
+					dot = Dot(level)
 				snake.step()
 			r.flush_pixels()
 	except SnakeCrash as sc:
