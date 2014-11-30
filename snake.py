@@ -4,6 +4,7 @@ from remote import Remote, PIXELS, COLS
 from random import choice
 from time import sleep
 from itertools import izip
+from threading import Thread, RLock
 import pygame, sys
 
 try:
@@ -77,31 +78,50 @@ class Dot(object):
 		r.set_pixel(self.position, value)
 
 class Joystick(object):
-	def __init__(self):
-		self.port = pygame.joystick.Joystick(0)
-		self.port.init()
-	
 	def flush(self):
 		pass
 
 	def get_dir(self, snakes):
-		pygame.event.pump()
-		x = self.port.get_axis(0)
-		y = self.port.get_axis(1)
-		if x < -0.5:
-			new_dir = Snake.LEFT
-		elif x > 0.5:
-			new_dir = Snake.RIGHT
-		elif y < -0.5:
-			new_dir = Snake.UP
-		elif y > 0.5:
-			new_dir = Snake.DOWN
-		else:
+		new_dir = jt.get_dir()
+		if not new_dir:
 			return
 		if snake.direction not in (Snake.OPPOSITES[new_dir], new_dir):
 			snake.direction = new_dir
 
 joystick = Joystick()
+class JoyThread(Thread):
+	new_dir = None
+
+	def __init__(self):
+		Thread.__init__(self)
+		self.port = pygame.joystick.Joystick(0)
+		self.port.init()
+		self.lock = RLock()
+
+	def run(self):
+		while True:
+			sleep(0.001)
+			pygame.event.pump()
+			x = self.port.get_axis(0)
+			y = self.port.get_axis(1)
+			with self.lock:
+				if x < -0.5:
+					self.new_dir = Snake.LEFT
+				elif x > 0.5:
+					self.new_dir = Snake.RIGHT
+				elif y < -0.5:
+					self.new_dir = Snake.UP
+				elif y > 0.5:
+					self.new_dir = Snake.DOWN
+
+	def get_dir(self):
+		with self.lock:
+			nd = self.new_dir
+			self.new_dir = None
+		return nd
+
+jt = JoyThread()
+jt.start()
 
 while True:
 	snakes = [Snake(i) for i in xrange(num_snakes)]
