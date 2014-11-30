@@ -124,6 +124,8 @@ jt = JoyThread()
 jt.start()
 
 while True:
+	for p in ps:
+		r.set_pixel(p, False)
 	snakes = [Snake(i) for i in xrange(num_snakes)]
 	joystick.flush()
 	for snake in snakes:
