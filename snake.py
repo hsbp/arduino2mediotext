@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
-# for joystick pinout, see https://github.com/dnet/c64joystick-arduino
-
-from serial import Serial
 from remote import Remote, PIXELS
 from random import choice
 from time import sleep
 from itertools import izip
-import sys
+import pygame, sys
 
 try:
 	num_snakes = int(sys.argv[1])
@@ -15,6 +12,10 @@ try:
 except (IndexError, ValueError, AssertionError):
 	print >>sys.stderr, 'Usage: {0} <number of players>'.format(sys.argv[0])
 	raise SystemExit(1)
+
+pygame.init()
+j = pygame.joystick.Joystick(0)
+j.init()
 
 r = Remote()
 ps = list(PIXELS)
@@ -76,32 +77,29 @@ class Dot(object):
 		r.set_pixel(self.position, value)
 
 class Joystick(object):
-	DIR_BITS = [
-			[Snake.DOWN, Snake.UP, None, None, None, None, Snake.RIGHT, Snake.LEFT],
-			[None, None, Snake.RIGHT, Snake.LEFT, Snake.DOWN, Snake.UP, None, None],
-			]
-
 	def __init__(self):
-		self.port = Serial('/dev/ttyUSB1', 9600, timeout=0)
+		self.port = pygame.joystick.Joystick(0)
+		self.port.init()
 	
 	def flush(self):
-		while self.port.read():
-			pass
+		pass
 
 	def get_dir(self, snakes):
-		serial_data = self.port.read()
-		num = 0xFF
-		if serial_data:
-			for input_byte in serial_data:
-				num &= ord(input_byte)
-		for dir_bits, snake in izip(self.DIR_BITS, snakes):
-			for i, new_dir in enumerate(dir_bits):
-				if new_dir is None:
-					continue
-				pwr = 1 << i
-				if (num & pwr) == 0 and snake.direction not in (Snake.OPPOSITES[new_dir], new_dir):
-					snake.direction = new_dir
-					break
+		pygame.event.pump()
+		x = self.port.get_axis(0)
+		y = self.port.get_axis(1)
+		if x < -0.5:
+			new_dir = Snake.LEFT
+		elif x > 0.5:
+			new_dir = Snake.RIGHT
+		elif y < -0.5:
+			new_dir = Snake.UP
+		elif y > 0.5:
+			new_dir = Snake.DOWN
+		else:
+			return
+		if snake.direction not in (Snake.OPPOSITES[new_dir], new_dir):
+			snake.direction = new_dir
 
 joystick = Joystick()
 
