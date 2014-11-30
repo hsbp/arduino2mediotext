@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from remote import Remote, PIXELS
+from remote import Remote, PIXELS, COLS
 from random import choice
 from time import sleep
 from itertools import izip
@@ -30,8 +30,8 @@ class Snake(object):
 	UP = (1, -1)
 	DOWN = (1, +1)
 	START = {
-			0: ((6, 6), RIGHT),
-			1: ((90, 6), LEFT),
+			0: ((6, 0), RIGHT),
+			1: ((COLS - 6, 0), LEFT),
 			}
 	OPPOSITES = {LEFT: RIGHT, RIGHT: LEFT, UP: DOWN, DOWN: UP}
 	TAIL = 0
