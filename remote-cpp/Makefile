@@ -1,7 +1,7 @@
 CPPFLAGS=-O2 -Wall -march=native
 CFLAGS=-O2 -Wall -march=native
 REMOTE_OBJS=Remote.o runner_unix.o
-EXECS=test_all_pixel_unix game_of_life_unix remote_test
+EXECS=test_all_pixel_unix game_of_life_unix scroller_unix remote_test
 
 all: $(EXECS)
 
