@@ -32,7 +32,7 @@ class Simul8r(object):
                 bits = '{0:08b}'.format(ord(char))
                 for bn, bit in enumerate(bits):
                     pn = cn * 8 + bn
-                    x = x1 + (pn % width)
+                    x = x1 * 8 + (pn % width)
                     y = y1 + (pn / width)
                     self.framebuf[y * COLS + x] = (bit == '1')
             clip = (x1 * 8, y1), (x2 * 8, y2)
@@ -55,7 +55,7 @@ class Simul8rHandler(StreamRequestHandler):
             if len(header) != 2:
                 break
             x1, y1, x2, y2 = parse_header(header)
-            width = (x2 - x1) * 8
+            width = x2 - x1
             height = y2 - y1
             payload = self.request.recv(width * height)
             sim.write(header + payload)
