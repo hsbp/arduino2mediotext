@@ -5,7 +5,7 @@ from time import sleep
 from PIL import Image
 
 def run(r):
-	img = Image.open('hack-scroll.png')
+	img = Image.open('hack-scroll.png').convert('L')
 	width, height = img.size
 	assert height == ROWS
 
