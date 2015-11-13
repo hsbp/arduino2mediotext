@@ -1,11 +1,14 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "Remote.h"
 #include "runner.h"
 
 void run(Remote &r) {
+	srand(time(NULL));
+
 	for (uint8_t y = 0; y < ROWS; y++) {
 		for (uint8_t x = 0; x < COLS; x++) {
 			if (rand() % 3 == 0) r.setPixel(x, y, true);
