@@ -9,6 +9,6 @@ all: $(EXECS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	rm -f $(EXECS)
+	rm -f $(EXECS) *.o
 
 .PHONY: all clean
