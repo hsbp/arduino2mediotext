@@ -31,6 +31,10 @@ int main(int argc, char **argv) {
 	HANDLE_BUF("test_second_block", r.flushPixels(), "\xC1\x12\x80");
 	r.setPixel(9, 0, true);
 	HANDLE_BUF("test_second_block", r.flushPixels(), "\xC1\x12\xc0");
+	r.setPixel(COLS - 1, 1, true);
+	r.setPixel(1, 2, true);
+	HANDLE_BUF("test_multi_row", r.flushPixels(), "\xCB\x0C\0\0\0\0\0\0\0\0"
+			"\0\0\0\x01\x40\0\0\0\0\0\0\0\0\0\0\0");
 	r.flushPixels();
 	printf("--- done ---\n");
 	return 0;

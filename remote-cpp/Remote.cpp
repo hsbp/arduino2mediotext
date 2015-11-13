@@ -48,8 +48,9 @@ void Remote::flushPixels() {
 			if (clip & bit) {
 				if (top == INVALID_CLIP || top > y) top = y;
 				if (bottom == INVALID_CLIP || bottom <= y) bottom = y + 1;
-				if (left == INVALID_CLIP || left > x + bit) left = x;
-				if (right == INVALID_CLIP || right <= x + bit) right = x + 1;
+				if (left == INVALID_CLIP || left > x) left = x;
+				if (right == INVALID_CLIP || right <= x) right = x + 1;
+
 			}
 			if (bit == 1) {
 				bit = 0x80;
