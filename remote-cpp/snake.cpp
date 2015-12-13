@@ -85,8 +85,12 @@ uint16_t Snake::step() {
 	const uint8_t nextValue = ((headPixel >> shift) & 0xFF) + ((int8_t)(m_direction & 0xFF));
 	const uint16_t nextPixel = (headPixel & (0xFF << (8 - shift))) | (nextValue << shift);
 
-	// TODO crash check
 	const uint8_t nextX = DECODE_PIXEL_X(nextPixel), nextY = DECODE_PIXEL_Y(nextPixel);
+
+	if (nextX >= COLS || nextY >= ROWS || m_remote->getPixel(nextX, nextY)) {
+		throw this;
+	}
+
 	m_pixelsBuf[(m_pixelsStart + m_pixelsLength) % PIXELS_SIZE] = nextPixel;
 	
 	m_remote->setPixel(nextX, nextY, true);
@@ -133,37 +137,49 @@ void run(Remote &r) {
 	while (true) {
 		Snake snake(&r, RIGHT);
 
-		while (true) {
-			Dot dot(&r);
-
+		try
+		{
 			while (true) {
-				r.flushPixels();
-				for (uint8_t i = 0; i < 3; i++) {
-					usleep(30000);
-					dot.draw((i % 2) == 1);
+				Dot dot(&r);
+
+				while (true) {
 					r.flushPixels();
-				}
+					for (uint8_t i = 0; i < 3; i++) {
+						usleep(30000);
+						dot.draw((i % 2) == 1);
+						r.flushPixels();
+					}
 
-				const uint16_t next = snake.step();
-				if (dot.posEquals(next)) {
-					snake.grow();
-					break;
-				}
+					const uint16_t next = snake.step();
+					if (dot.posEquals(next)) {
+						snake.grow();
+						break;
+					}
 
-				SDL_Event event;
+					SDL_Event event;
 
-				while (SDL_PollEvent(&event)) {
-					switch (event.type) {
-						case SDL_JOYAXISMOTION:
-							if (event.jaxis.value < -3200 || event.jaxis.value > 3200) {
-								snake.turn(AXIS_TO_DIR(event.jaxis.axis) | VALUE_TO_DIR(event.jaxis.value));
-							}
-							break;
-						case SDL_QUIT:
-							return;
+					while (SDL_PollEvent(&event)) {
+						switch (event.type) {
+							case SDL_JOYAXISMOTION:
+								const int value = event.jaxis.value;
+								if (value < -3200 || value > 3200) {
+									snake.turn(AXIS_TO_DIR(event.jaxis.axis) |
+											VALUE_TO_DIR(value));
+								}
+								break;
+							case SDL_QUIT:
+								return;
+						}
 					}
 				}
 			}
+		} catch (Snake *crash) {
+			for (uint8_t i = 0; i < 32; i++) {
+				snake.draw((i % 2) == 1);
+				usleep(50000);
+				r.flushPixels();
+			}
+			snake.draw(false);
 		}
 	}
 }
