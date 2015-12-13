@@ -8,6 +8,7 @@
 #define RIGHT 0x0001
 #define UP    0x08FF
 #define DOWN  0x0801
+#define INVALID_DIR 0
 
 #define OPPOSITE(D) (((D) & 0xFF00) | (0x100 - ((D) & 0xFF)))
 #define PIXELS_SIZE (COLS * ROWS)
@@ -158,19 +159,25 @@ void run(Remote &r) {
 
 					SDL_Event event;
 
+					uint16_t nextTurn = INVALID_DIR;
+
 					while (SDL_PollEvent(&event)) {
 						switch (event.type) {
 							case SDL_JOYAXISMOTION:
-								const int value = event.jaxis.value;
-								if (value < -3200 || value > 3200) {
-									snake.turn(AXIS_TO_DIR(event.jaxis.axis) |
-											VALUE_TO_DIR(value));
+								{
+									const int value = event.jaxis.value;
+									if (value < -3200 || value > 3200) {
+										nextTurn = AXIS_TO_DIR(event.jaxis.axis) |
+											VALUE_TO_DIR(value);
+									}
 								}
 								break;
 							case SDL_QUIT:
 								return;
 						}
 					}
+
+					if (nextTurn != INVALID_DIR) snake.turn(nextTurn);
 				}
 			}
 		} catch (Snake *crash) {
