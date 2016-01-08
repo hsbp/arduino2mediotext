@@ -1,4 +1,4 @@
-CPPFLAGS=-O2 -Wall -march=native
+CPPFLAGS=-O2 -Wall -march=native -std=c++11
 LDFLAGS=-lSDL2
 REMOTE_OBJS=Remote.o runner_unix.o
 SERIAL_OBJS=Remote.o runner_serial.o

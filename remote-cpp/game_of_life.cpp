@@ -17,8 +17,7 @@ void run(Remote &r) {
 
 	for (int step = 0; step < 100; step++) {
 		usleep(200000);
-		uint8_t queue[COLS * ROWS];
-		memset(queue, 0, sizeof(queue));
+		uint8_t queue[COLS * ROWS] = {0};
 		for (uint8_t y = 0; y < ROWS; y++) {
 			for (uint8_t x = 0; x < COLS; x++) {
 				uint8_t living =

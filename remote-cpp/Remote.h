@@ -10,8 +10,8 @@
 class Remote {
 
 protected:
-	uint8_t m_framebuf[COLS * ROWS / BIT_PER_BYTE];
-	uint8_t m_clip[ROWS * COLS / BIT_PER_BYTE / BIT_PER_BYTE + 1];
+	uint8_t m_framebuf[COLS * ROWS / BIT_PER_BYTE] = {0xFF};
+	uint8_t m_clip[ROWS * COLS / BIT_PER_BYTE / BIT_PER_BYTE + 1] = {0x00};
 	int m_fdrd, m_fdwr;
 
 public:

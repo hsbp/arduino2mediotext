@@ -13,8 +13,6 @@
 Remote::Remote(int fdrd, int fdwr) {
 	m_fdrd = fdrd;
 	m_fdwr = fdwr;
-	memset(m_framebuf, 0xFF, sizeof(m_framebuf));
-	memset(m_clip, 0x00, sizeof(m_clip));
 	for (uint8_t y = 0; y < ROWS; y++) {
 		for (uint8_t x = 0; x < COLS; x++) {
 			setPixel(x, y, false);
