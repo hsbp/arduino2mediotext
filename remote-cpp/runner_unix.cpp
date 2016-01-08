@@ -18,7 +18,7 @@
 
 #define SOCKET_PATH "simul8r.sock"
 
-void error(char *msg) {
+void error(const char *msg) {
 	perror(msg);
 	exit(1);
 }
