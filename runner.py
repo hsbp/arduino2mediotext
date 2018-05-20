@@ -14,8 +14,11 @@ def main():
             help='Remote host to connect to')
     parser.add_argument('--tport', dest='tport', default=42493,
             help='Remote port to connect to (default: 42493)')
+    parser.add_argument('--record', dest='record', metavar='filename',
+            help='Record output to file')
     parser.add_argument('--sock', dest='sock', help='Unix socket to connect to')
     args = parser.parse_args()
+    rec = None
     if args.drawille:
         from drawille_bridge import DrawilleBridge
         r = DrawilleBridge()
@@ -25,9 +28,15 @@ def main():
     elif args.host:
         from tcp import TcpSerialBridge
         r = Remote(serial_class=TcpSerialBridge((args.host, args.tport)))
+    elif args.record:
+        from record import Recorder
+        rec = Recorder()
+        r = Remote(serial_class=rec)
     else:
         r = Remote(port=args.sport)
     __import__(args.module).run(r)
+    if rec:
+        rec.save(args.record)
 
 
 if __name__ == '__main__':
