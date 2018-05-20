@@ -32,9 +32,7 @@ class Remote(object):
             chr(0xC0 | (y1 << 3) | y2),
             chr((x1 << 4) | x2),
             block_pixels))
-        self.port.write(raw)
-        while not self.port.read():
-            pass
+        self.send_command_with_1b_reply(raw)
 
     def get_pixel(self, pixel):
         return self.framebuf[pixel2fbindex(pixel)]
@@ -43,6 +41,13 @@ class Remote(object):
         self.framebuf[pixel2fbindex(pixel)] = value
         block = pixel2block(pixel)
         self.clip.add(block)
+
+    def send_command_with_1b_reply(self, cmd):
+        self.port.write(cmd)
+        while True:
+            p = self.port.read()
+            if p:
+                return ord(p)
 
     def flush_pixels(self):
         clip = self.clip
