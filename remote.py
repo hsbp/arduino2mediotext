@@ -18,6 +18,9 @@ class Remote(object):
         self.framebuf = [None] * ROWS * COLS
         sleep(2)
         self.clip = set()
+        self.set_disp_offset(0)
+        self.set_ops_offset(0)
+        self.set_scroll_speed(0)
         for pixel in PIXELS:
 			self.set_pixel(pixel, False)
         self.flush_pixels()
@@ -41,6 +44,26 @@ class Remote(object):
         self.framebuf[pixel2fbindex(pixel)] = value
         block = pixel2block(pixel)
         self.clip.add(block)
+
+    def set_ops_offset(self, offset):
+        return self.send_command_with_1b_reply(chr(0x20 | offset))
+
+    def set_disp_offset(self, offset):
+        return self.send_command_with_1b_reply(chr(0x02) + chr(offset))
+
+    def set_scroll_speed(self, speed):
+        return self.send_command_with_1b_reply(chr(0x40 | speed))
+
+    def get_disp_offset(self):
+        return self.send_command_with_1b_reply(chr(0x03))
+
+    def write_eeprom(self, payload):
+        length = len(payload)
+        count = self.send_command_with_1b_reply(chr(0x80 | (length >> 8)) + chr(length & 0xFF))
+        for b in payload:
+            result = self.send_command_with_1b_reply(b)
+            assert result == ord(b)
+        return count
 
     def send_command_with_1b_reply(self, cmd):
         self.port.write(cmd)
