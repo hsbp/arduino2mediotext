@@ -110,10 +110,6 @@ def valid_block(block):
     x, y = block
     return 0 <= x <= (COLS / BIT_PER_BYTE) and 0 <= y <= ROWS
 
-def next_block(block):
-    x, y = block
-    return x + 1, y + 1
-
 if __name__ == '__main__':
     r = Remote()
     for y in xrange(ROWS):
